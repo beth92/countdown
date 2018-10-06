@@ -1,10 +1,15 @@
 import React from 'react';
 
+// local components
+import Controls from './Controls';
+
 export default class App extends React.Component {
 
   render() {
     return (
-      <h1>This is my awesome app</h1>
+      <React.Fragment>
+        <Controls/>
+      </React.Fragment>
     );
   }
 }
