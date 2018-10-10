@@ -29,34 +29,9 @@ const Button = styled.button`
 `;
 
 const initialState = {
-  timeRemaining: 60000,
+  timeRemaining: 5000,
   running: false,
   gameOver: false
-};
-
-const startClicked = function() {
-  this.startTime = Date.now();
-  this.setState({
-    running: true
-  });
-  this.timerID = window.setInterval(updateClock.bind(this), 100);
-  this.props.startGame();
-};
-
-const updateClock = function() {
-  this.setState({
-    timeRemaining: initialState.timeRemaining - (Date.now() - this.startTime)
-  });
-  if (this.state.timeRemaining < 500) {
-    this.endGame();
-  }
-};
-
-const resetClicked = function() {
-  console.log('Reset clicked');
-  window.clearInterval(this.timerID);
-  this.setState(initialState);
-  this.props.resetGame();
 };
 
 export default class Controls extends React.Component {
@@ -64,6 +39,35 @@ export default class Controls extends React.Component {
   constructor() {
     super();
     this.state = initialState;
+
+    this.startClicked = this.startClicked.bind(this);
+    this.resetClicked = this.resetClicked.bind(this);
+    this.updateClock = this.updateClock.bind(this);
+  }
+
+  startClicked() {
+    this.startTime = Date.now();
+    this.setState({
+      running: true
+    });
+    this.timerID = window.setInterval(this.updateClock, 100);
+    this.props.startGame();
+  }
+
+  resetClicked() {
+    console.log('Reset clicked');
+    window.clearInterval(this.timerID);
+    this.setState(initialState);
+    this.props.resetGame();
+  }
+
+  updateClock() {
+    this.setState({
+      timeRemaining: initialState.timeRemaining - (Date.now() - this.startTime)
+    });
+    if (this.state.timeRemaining < 500) {
+      this.endGame();
+    }
   }
 
   endGame() {
@@ -73,19 +77,19 @@ export default class Controls extends React.Component {
       running: false,
       gameOver: true
     });
-    this.props.resetGame();
+    this.props.endGame();
   }
 
   render() {
     return (
       <Div>
-        <Button primary onClick={ startClicked.bind(this) } disabled={ this.state.running || this.state.gameOver }>Start</Button>
-        <Button onClick={ resetClicked.bind(this) }>Reset</Button>
+        <Button primary onClick={ this.startClicked } disabled={ this.state.running || this.state.gameOver }>Start</Button>
+        <Button onClick={ this.resetClicked }>Reset</Button>
         <Div>
           <H2>
             { fecha.format(this.state.timeRemaining, 'm:ss') }
           </H2>
-          <H2> { this.props.score } pts</H2>
+          <H2> { this.state.gameOver && 'Game Over! You scored:' } { this.props.score } pts</H2>
         </Div>
       </Div>
     );

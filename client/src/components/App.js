@@ -44,29 +44,16 @@ const initialState = {
   letters: generateLetters(9)
 };
 
-
-const resetGame = function() {
-  // reset everything to initial defaults
-  this.setState(initialState);
-  this.setState({
-    letters: generateLetters(9)
-  });
-};
-
-const startGame = function() {
-  console.log('Running game');
-  this.setState({
-    running: true
-  });
-};
-
 export default class App extends React.Component {
 
   constructor() {
     super();
     this.state = initialState;
 
+    this.startGame = this.startGame.bind(this);
+    this.resetGame = this.resetGame.bind(this);
     this.updateScore = this.updateScore.bind(this);
+    this.endGame = this.endGame.bind(this);
   }
 
   updateScore(n) {
@@ -77,14 +64,37 @@ export default class App extends React.Component {
     });
   }
 
+  startGame() {
+    console.log('Running game');
+    this.setState({
+      running: true
+    });
+  }
+
+  resetGame() {
+    // reset everything to initial defaults
+    this.setState(initialState);
+    this.setState({
+      letters: generateLetters(9)
+    });
+  }
+
+  endGame() {
+    console.log('Game Over!');
+    this.setState({
+      running: false
+    });
+  }
+
   render() {
     return (
       <React.Fragment>
         <Controls
-          startGame={ startGame.bind(this) }
-          resetGame={ resetGame.bind(this) }
+          startGame={ this.startGame }
+          resetGame={ this.resetGame }
+          endGame={ this.endGame }
           score={ this.state.score }/>
-        <LetterDisplay letters={ this.state.letters }/>
+        <LetterDisplay letters={ this.state.letters } showLetters={ this.state.running }/>
         <Answers
           updateScore={ (points) => this.updateScore(points) }
           submissionDisabled={ !this.state.running }

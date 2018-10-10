@@ -20,7 +20,7 @@ export default class LetterDisplay extends React.Component {
 
   renderLetters (letters) {
     return letters.map((letter, index) => {
-      return (<Letter key={ index }><h1>{ letter }</h1></Letter>);
+      return (<Letter key={ index }><h1>{ this.props.showLetters && letter }</h1></Letter>);
     });
   }
 
