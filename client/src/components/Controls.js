@@ -29,7 +29,7 @@ const Button = styled.button`
 `;
 
 const initialState = {
-  timeRemaining: 6000,
+  timeRemaining: 60000,
   running: false,
   gameOver: false
 };
@@ -79,7 +79,7 @@ export default class Controls extends React.Component {
   render() {
     return (
       <Div>
-        <Button primary onClick={ startClicked.bind(this) } disabled={ this.state.running }>Start</Button>
+        <Button primary onClick={ startClicked.bind(this) } disabled={ this.state.running || this.state.gameOver }>Start</Button>
         <Button onClick={ resetClicked.bind(this) }>Reset</Button>
         <Div>
           <H2>

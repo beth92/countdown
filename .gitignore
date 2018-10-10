@@ -2,3 +2,4 @@
 .eslintrc.*
 client/dist/
 .eslintignore
+api_key.json

@@ -6,6 +6,9 @@ import Answers from './Answers';
 import Controls from './Controls';
 import LetterDisplay from './LetterDisplay';
 
+// local utils
+import generateLetters from '../utils/letterGenerator';
+
 
 injectGlobal`
   * {
@@ -35,27 +38,18 @@ injectGlobal`
   }
 `;
 
-const generateLetters = () => {
-  return ['H', 'S', 'G', 'E', 'I', 'A', 'C', 'S', 'Y'];
-};
-
 const initialState = {
   running: false,
   score: 0,
-  letters: generateLetters()
+  letters: generateLetters(9)
 };
 
 
 const resetGame = function() {
   // reset everything to initial defaults
   this.setState(initialState);
-};
-
-const updateScore = function(n) {
-  this.setState(state => {
-    return {
-      score: state.score + n
-    };
+  this.setState({
+    letters: generateLetters(9)
   });
 };
 
@@ -71,6 +65,16 @@ export default class App extends React.Component {
   constructor() {
     super();
     this.state = initialState;
+
+    this.updateScore = this.updateScore.bind(this);
+  }
+
+  updateScore(n) {
+    this.setState(state => {
+      return {
+        score: state.score + n
+      };
+    });
   }
 
   render() {
@@ -81,7 +85,10 @@ export default class App extends React.Component {
           resetGame={ resetGame.bind(this) }
           score={ this.state.score }/>
         <LetterDisplay letters={ this.state.letters }/>
-        <Answers updateScore={ updateScore.bind(this) }/>
+        <Answers
+          updateScore={ (points) => this.updateScore(points) }
+          submissionDisabled={ !this.state.running }
+          letters={ this.state.letters }/>
       </React.Fragment>
     );
   }
