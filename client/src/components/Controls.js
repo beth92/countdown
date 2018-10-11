@@ -13,17 +13,7 @@ const H2 = styled.h2`
 // TODO: do this properly so it doesn't look like crap
 const Button = styled.button`
   background: ${props => props.primary ? '#5abaa7' : 'white'};
-  border: none;
   color: ${props => props.primary ?  'white' : '#5abaa7'};
-  font-size: 1.3em;
-  margin: 1em;
-  min-width: 10rem;
-  padding: 0.25em 1em;
-
-  :hover {
-    background: ${props => props.primary ? '#5abaa7' : 'white'};
-    color: ${props => props.primary ? 'white' : '#5abaa7'};
-  }
 
   :disabled {
     opacity: 0.4;
