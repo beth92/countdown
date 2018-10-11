@@ -7,7 +7,12 @@ import { ToastContainer, toast } from 'react-toastify';
 // static assets required for toastify
 import 'react-toastify/dist/ReactToastify.css';
 
+// local components
+import InfoPanel from './InfoPanel';
+
+// helpers
 import validateWord from '../utils/wordValidator';
+import { wordAlreadySubmitted } from '../utils/util';
 
 const Div = styled.div`
   display: flex;
@@ -36,12 +41,35 @@ const Form = styled.form.attrs({ autoComplete: 'off'})`
   width: 100%;
 `;
 
+const WordList = styled.div`
+  background: white;
+  display: flex;
+  margin: 1rem;
+  overflow-y: auto;
+
+  table {
+    border-spacing: unset;
+  }
+
+  td {
+    border-bottom: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  tr:hover {
+    background: #f5f5f5;
+  }
+`;
+
 export default class Answers extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      submissions: []
+    };
     this.submitAnswer = this.submitAnswer.bind(this);
-
     this.setInputRef = (element) => {
       this.submissionField = element;
     };
@@ -52,14 +80,39 @@ export default class Answers extends React.Component {
     const submission = e.target.answer.value.trim().toUpperCase();
     if(submission && submission.length > 2) {
       e.target.answer.value = '';
-      console.log('validating word');
-      validateWord(submission, this.props.letters).then(res => {
-        if (res) {
+      if (wordAlreadySubmitted(submission, this.state.submissions)) {
+        toast.info('Word' + submission + 'already submitted!');
+        return;
+      }
+      this.setState((state) => {
+        return {
+          submissions: state.submissions.concat([{
+            word: submission,
+            validated: false,
+            definition: undefined
+          }])
+        };
+      });
+      validateWord(submission, this.props.letters).then(def => {
+        if (def) {
           const pts = submission.length;
           // toastify doesn't seem to support template strings
           // https://github.com/fkhadra/react-toastify/issues/148
           toast(pts + ' points for ' + submission + '!');
           this.props.updateScore(submission.length);
+          // update the validated and definitions
+          // find submission in submissions array
+          this.setState((state) => {
+            return {
+              submissions: state.submissions.map(item => {
+                if (item.word === submission) {
+                  item.validated = true;
+                  item.definition = def;
+                }
+                return item;
+              })
+            };
+          });
         } else {
           toast.error(submission + ' is invalid!');
         }
@@ -78,13 +131,34 @@ export default class Answers extends React.Component {
 
   render() {
     return (
-      <Div>
-        <ToastContainer autoClose={2000} hideProgressBar={ true }/>
-        <Form onSubmit={ this.submitAnswer } >
-          <Input disabled={ this.props.submissionDisabled } innerRef={ this.setInputRef }/>
-          <SubmitButton>Submit</SubmitButton>
-        </Form>
-      </Div>
+      <React.Fragment>
+        <Div>
+          <ToastContainer autoClose={2000} hideProgressBar={ true }/>
+          <Form onSubmit={ this.submitAnswer } >
+            <Input disabled={ this.props.submissionDisabled } innerRef={ this.setInputRef }/>
+            <SubmitButton>Submit</SubmitButton>
+          </Form>
+        </Div>
+        <WordList>
+          <table>
+            <tbody>
+              { this.renderSubmissions() }
+            </tbody>
+          </table>
+        </WordList>
+      </React.Fragment>
     );
+  }
+
+  renderSubmissions() {
+    return this.state.submissions.map((submission, index) => {
+      return (
+        <tr key={ index }>
+          <td>{ submission.word }</td>
+          <td>{ submission.validated ? submission.word.length : '' }</td>
+          <td>{ submission.definition && submission.definition.definition }</td>
+        </tr>
+      );
+    });
   }
 }

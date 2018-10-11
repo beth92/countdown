@@ -3,7 +3,11 @@ const { API_KEY } = require('./api_key.json');
 
 const validateWord = async (word) => {
   const res = await fetchDefinition(word);
-  return res.status === 200 && res.data && res.data.definitions;
+  if (res.status === 200 && res.data && res.data.definitions) {
+    return res.data.definitions[0];
+  } else {
+    return undefined;
+  }
 };
 
 function fetchDefinition(word) {

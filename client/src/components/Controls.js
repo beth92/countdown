@@ -29,7 +29,7 @@ const Button = styled.button`
 `;
 
 const initialState = {
-  timeRemaining: 5000,
+  timeRemaining: 60000,
   running: false,
   gameOver: false
 };

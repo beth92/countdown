@@ -24,6 +24,9 @@ injectGlobal`
   body {
     background: #aaddcf;
     color: #555555;
+    display: flex;
+    max-height: 100vh;
+    flex-direction: column;
     font-family: Helvetica, Arial, sans-serif;
     font-size: 1.6rem;
   }

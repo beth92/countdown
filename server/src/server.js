@@ -14,9 +14,9 @@ app.get('/check', (req, res) => {
   if (!word) {
     res.sendStatus(400);
   }  else {
-    validateWord(word).then((valid) => {
-      if(valid) {
-        res.sendStatus(200);
+    validateWord(word).then((def) => {
+      if(def) {
+        res.status(200).send(def);
       } else {
         res.sendStatus(204);
       }

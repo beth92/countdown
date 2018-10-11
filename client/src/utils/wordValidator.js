@@ -6,11 +6,8 @@ export default async function validateWord(word, letters) {
   });
   if (lettersNotFound.length === 0) {
     const checkRealWord = await axios.get(`/check?word=${word}`);
-    if (checkRealWord.status === 204) {
-      console.log(`${word} is not a valid word.`);
-    }
-    return checkRealWord.status === 200;
+    return checkRealWord.data;
   } else {
-    return false;
+    return undefined;
   }
 }
