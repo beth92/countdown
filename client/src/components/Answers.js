@@ -4,13 +4,6 @@ import styled from 'styled-components';
 // third party components
 import { ToastContainer, toast } from 'react-toastify';
 
-// static assets required for toastify
-import 'react-toastify/dist/ReactToastify.css';
-
-// helpers
-import validateWord from '../utils/wordValidator';
-import { wordAlreadySubmitted } from '../utils/util';
-
 const Div = styled.div`
   display: flex;
   justify-content: center;
@@ -31,10 +24,12 @@ const SubmitButton = styled.button`
   border-radius: 0.5rem;
   flex-grow: 1;
   margin: 1rem;
+  min-height: 4rem;
 `;
 
 const Form = styled.form.attrs({ autoComplete: 'off'})`
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
 `;
 
@@ -46,12 +41,18 @@ const WordList = styled.div`
 
   table {
     border-spacing: unset;
+    width: 100%;
   }
 
   td {
     border-bottom: 1px solid #ddd;
     padding: 8px;
     text-align: left;
+  }
+
+  tr.invalid {
+    font-style: italic;
+    opacity: 0.5;
   }
 
   tr:hover {
@@ -63,57 +64,21 @@ export default class Answers extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      submissions: []
-    };
-    this.submitAnswer = this.submitAnswer.bind(this);
+
+    this.submitForm = this.submitForm.bind(this);
+
+    // used to auto focus form on game start
     this.setInputRef = (element) => {
       this.submissionField = element;
     };
   }
 
-  submitAnswer(e) {
+  submitForm(e) {
     e.preventDefault();
     const submission = e.target.answer.value.trim().toUpperCase();
     if(submission && submission.length > 2) {
       e.target.answer.value = '';
-      if (wordAlreadySubmitted(submission, this.state.submissions)) {
-        toast.info('Word' + submission + 'already submitted!');
-        return;
-      }
-      this.setState((state) => {
-        return {
-          submissions: state.submissions.concat([{
-            word: submission,
-            validated: false,
-            definition: undefined
-          }])
-        };
-      });
-      validateWord(submission, this.props.letters).then(def => {
-        if (def) {
-          const pts = submission.length;
-          // toastify doesn't seem to support template strings
-          // https://github.com/fkhadra/react-toastify/issues/148
-          toast(pts + ' points for ' + submission + '!');
-          this.props.updateScore(submission.length);
-          // update the validated and definitions
-          // find submission in submissions array
-          this.setState((state) => {
-            return {
-              submissions: state.submissions.map(item => {
-                if (item.word === submission) {
-                  item.validated = true;
-                  item.definition = def;
-                }
-                return item;
-              })
-            };
-          });
-        } else {
-          toast.error(submission + ' is invalid!');
-        }
-      });
+      this.props.submitAnswer(submission);
     } else {
       toast.info('Words must be longer than two letters');
     }
@@ -131,7 +96,7 @@ export default class Answers extends React.Component {
       <React.Fragment>
         <Div>
           <ToastContainer autoClose={2000} hideProgressBar={ true }/>
-          <Form onSubmit={ this.submitAnswer } >
+          <Form onSubmit={ this.submitForm } >
             <Input disabled={ this.props.submissionDisabled } innerRef={ this.setInputRef }/>
             <SubmitButton>Submit</SubmitButton>
           </Form>
@@ -148,12 +113,16 @@ export default class Answers extends React.Component {
   }
 
   renderSubmissions() {
-    return this.state.submissions.map((submission, index) => {
+    return this.props.submissions.map((submission, index) => {
       return (
-        <tr key={ index }>
+        <tr key={ index } className={  !submission.validated ? 'invalid' : undefined } >
           <td>{ submission.word }</td>
-          <td>{ submission.validated ? submission.word.length : '' }</td>
-          <td>{ submission.definition && submission.definition.definition }</td>
+          <td>
+            { submission.validated ? `${submission.word.length} pts` : '' }
+          </td>
+          <td>
+            { submission.definition && `${submission.definition.partOfSpeech}: ${submission.definition.definition}` }
+          </td>
         </tr>
       );
     });
