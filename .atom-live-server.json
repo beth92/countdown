@@ -1,4 +1,0 @@
-{
-  "root": "./client/dist/",
-  "entry-file": "index.html"
-}

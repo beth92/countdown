@@ -3,3 +3,4 @@
 client/dist/
 .eslintignore
 api_key.json
+.atom-live-server.json
