@@ -8,7 +8,8 @@
     "build": "npx webpack --config ./webpack.config.js --mode 'development'",
     "~build": "npx webpack --config ./webpack.config.js --mode 'development' --watch",
     "start": "node server/src/server.js",
-    "~start": "npx nodemon server/src/server.js"
+    "~start": "npx nodemon server/src/server.js",
+    "heroku-postbuild": "npx webpack -p"
   },
   "author": "Beth Townsend",
   "license": "ISC",
