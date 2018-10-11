@@ -32,7 +32,7 @@ This may take a little while.
 ## Running
 
 Requires an API key for [WordsAPI](https://www.wordsapi.com/).
-Before you can start the application you wlil have to add
+Before you can start the application you will have to add
 your API key to server configuration. Create a file at
 `server/config/api_key.json` and insert the following:
 
