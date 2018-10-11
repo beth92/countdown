@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { API_KEY } = require('./../config/api_key.json');
+const API_KEY = process.env.API_KEY || require('./../config/api_key.json').API_KEY;
 
 const validateWord = async (word) => {
   const res = await fetchDefinition(word);
