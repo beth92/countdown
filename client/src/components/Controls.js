@@ -12,11 +12,9 @@ const H2 = styled.h2`
 
 // TODO: do this properly so it doesn't look like crap
 const Button = styled.button`
-  background: ${props => props.primary ? 'white' : '#5abaa7'};
-  border: 0.15rem solid #5abaa7;
-  box-shadow: 0.1rem 0.2rem #5abaa7;
-  border-radius: 3px;
-  color: ${props => props.primary ? '#5abaa7' : 'white'};
+  background: ${props => props.primary ? '#5abaa7' : 'white'};
+  border: none;
+  color: ${props => props.primary ?  'white' : '#5abaa7'};
   font-size: 1.3em;
   margin: 1em;
   min-width: 10rem;
@@ -25,6 +23,10 @@ const Button = styled.button`
   :hover {
     background: ${props => props.primary ? '#5abaa7' : 'white'};
     color: ${props => props.primary ? 'white' : '#5abaa7'};
+  }
+
+  :disabled {
+    opacity: 0.6;
   }
 `;
 
