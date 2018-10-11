@@ -41,6 +41,10 @@ injectGlobal`
 
   input, button {
     font-size: 1.3rem;
+
+    &:focus {
+      outline: none;
+    }
   }
 
   h1 {
