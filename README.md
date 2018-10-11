@@ -1,7 +1,7 @@
 # Countdown
 
-A simple word game inspired by the long-running British game show.
-
+A simple word game inspired by the long-running British game show. See a demo
+[here](https://infinite-dusk-13243.herokuapp.com/).
 ## Description
 
 The game is about finding as many valid words as possible in a given
@@ -9,7 +9,7 @@ set of random characters before the time runs out. A "valid" word
 is determined by the [Words API](https://www.wordsapi.com/) which will
 check for a definition of the submitted word in order to vaidate the
 submission and award points.(Sometimes these definitions are questionable
-or just missing). 
+or just missing).
 
 Technologies used:
 
