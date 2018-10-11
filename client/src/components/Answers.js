@@ -7,9 +7,6 @@ import { ToastContainer, toast } from 'react-toastify';
 // static assets required for toastify
 import 'react-toastify/dist/ReactToastify.css';
 
-// local components
-import InfoPanel from './InfoPanel';
-
 // helpers
 import validateWord from '../utils/wordValidator';
 import { wordAlreadySubmitted } from '../utils/util';
